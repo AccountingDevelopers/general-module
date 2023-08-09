@@ -7,7 +7,7 @@ import { UserCardComponent } from './modules/users/user-card/user-card.component
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'api/v1/modules',
     pathMatch: 'full',
     component: InitialMenuComponent,
     data: {
@@ -29,7 +29,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'users',
+    path: 'api/v1/modules/users',
     children: [
       {
         path: '',
@@ -42,7 +42,7 @@ const routes: Routes = [
       }]
   },
   {
-    path: 'user-departments',
+    path: 'api/v1/modules/user-departments',
     component: UserDepartmentsComponent
   }
 ]

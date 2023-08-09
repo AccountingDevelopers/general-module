@@ -5,6 +5,9 @@ import { UsersComponent } from './users.component';
 import { ButtonModule } from 'primeng/button'
 import { TableModule } from 'primeng/table';
 import { UserCardComponent } from './user-card/user-card.component'
+import { FormsModule } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
+import { TreeSelectModule } from 'primeng/treeselect';
 
 @NgModule({
   declarations: [UsersComponent, UserCardComponent],
@@ -12,7 +15,10 @@ import { UserCardComponent } from './user-card/user-card.component'
     CommonModule,
     ModuleHeaderModule,
     ButtonModule,
-    TableModule
+    TableModule,
+    FormsModule,
+    InputTextModule,
+    TreeSelectModule
   ],
   exports: [UsersComponent]
 })

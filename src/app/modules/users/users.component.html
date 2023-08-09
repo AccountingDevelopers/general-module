@@ -20,9 +20,17 @@
             </ng-template>
             <ng-template pTemplate="body" let-element>
                 <tr (dblclick)="openCard(element)">
-                    <td>{{ element.name.full }}</td>
-                    <td>{{ element.email }}</td>
-                    <td>{{ getDepartmentsLabel(element.departments) }}</td>
+                    <td>
+                        <input pInputText [(ngModel)]="element.name.full">
+                    </td>
+                    <td>
+                        <input pInputText [(ngModel)]="element.email">
+                    </td>
+                    <td *ngIf="getDepartments(element.departments) as department">
+                        <!-- {{ getDepartments(element.departments) }} -->
+                        <p-treeSelect appendTo="body" [options]="departments" placeholder="Select Item"
+                            (onNodeSelect)="selectDepartment($event, element)"></p-treeSelect>
+                    </td>
                     <td>{{ element.createdAt | date }}</td>
                     <td>{{ element.updatedAt | date }}</td>
                 </tr>
