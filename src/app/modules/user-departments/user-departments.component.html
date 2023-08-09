@@ -1,0 +1,49 @@
+<section class="module">
+    <header>
+        <lib-module-header header="Групы пользователей">
+            <ng-template templateRef="headerToolbar">
+                <p-button icon="pi pi-plus" label="Создать" (onClick)="onCreateDepartment()"></p-button>
+            </ng-template>
+        </lib-module-header>
+    </header>
+
+    <div class="content">
+        <p-treeTable [value]="departments" [scrollable]="true">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Название</th>
+                    <th>Дата создания</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+                <tr [ttRow]="rowNode">
+                    <td>
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        {{ rowData.label }}
+                    </td>
+                    <td>{{ rowData.createdAt | date }}</td>
+                </tr>
+            </ng-template>
+        </p-treeTable>
+    </div>
+</section>
+
+<p-dialog header="Создать отдел" appendTo="body" styleClass="modal" [maximizable]="true" [modal]="true"
+    [draggable]="true" [resizable]="true" [(visible)]="isCreateDepartment">
+
+    <div [formGroup]="createDepartmentForm">
+        <span class="p-fluid p-field">
+            <input type="text" pInputText required formControlName="name" [placeholder]="'Название отдела'" />
+        </span>
+
+        <span class="p-fluid p-field">
+            <textarea rows="2" pInputTextarea formControlName="description" [placeholder]="'Описание отдела'"
+                [style.minHeight]="'40px'" [autoResize]="true"></textarea>
+        </span>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-check" label="Создать" styleClass="p-button-text"
+            (onClick)="createDepartment()"></p-button>
+    </ng-template>
+</p-dialog>

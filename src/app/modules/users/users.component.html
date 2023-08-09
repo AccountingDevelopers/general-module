@@ -1,0 +1,32 @@
+<section class="module">
+    <header>
+        <lib-module-header header="Пользователи">
+            <ng-template templateRef="headerToolbar">
+                <p-button icon="pi pi-plus" label="Создать"></p-button>
+            </ng-template>
+        </lib-module-header>
+    </header>
+
+    <div class="content">
+        <p-table [value]="users">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Имя</th>
+                    <th>Email</th>
+                    <th>Отдел</th>
+                    <th>Дата регистрации</th>
+                    <th>Дата изменения</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-element>
+                <tr (dblclick)="openCard(element)">
+                    <td>{{ element.name.full }}</td>
+                    <td>{{ element.email }}</td>
+                    <td>{{ getDepartmentsLabel(element.departments) }}</td>
+                    <td>{{ element.createdAt | date }}</td>
+                    <td>{{ element.updatedAt | date }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</section>
