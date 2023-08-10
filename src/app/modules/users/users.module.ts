@@ -5,9 +5,12 @@ import { UsersComponent } from './users.component';
 import { ButtonModule } from 'primeng/button'
 import { TableModule } from 'primeng/table';
 import { UserCardComponent } from './user-card/user-card.component'
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { TreeSelectModule } from 'primeng/treeselect';
+import { DialogModule } from 'primeng/dialog';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [UsersComponent, UserCardComponent],
@@ -18,7 +21,11 @@ import { TreeSelectModule } from 'primeng/treeselect';
     TableModule,
     FormsModule,
     InputTextModule,
-    TreeSelectModule
+    TreeSelectModule,
+    DialogModule,
+    CheckboxModule,
+    ReactiveFormsModule,
+    ConfirmDialogModule
   ],
   exports: [UsersComponent]
 })

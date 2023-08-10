@@ -58,4 +58,21 @@ export class UserDepartmentsComponent implements OnInit {
             }
         }))
     }
+
+    updateCompany() {
+        this.subscription.add(this.accCompaniesService.update(this.currentCompany).subscribe({
+            next: ({ company }) => {
+                this.init(company)
+            }
+        }))
+    }
+
+    onDeleteDepartment(data: any) {
+        console.log(data);
+        const index = this.currentCompany.departments.findIndex((d: any) => d._id === data._id)
+        if (index !== -1) {
+            this.currentCompany.departments.splice(index, 1)
+            this.updateCompany()
+        }
+    }
 }

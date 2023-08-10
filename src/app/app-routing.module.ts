@@ -8,42 +8,47 @@ import { UserCardComponent } from './modules/users/user-card/user-card.component
 const routes: Routes = [
   {
     path: 'api/v1/modules',
-    pathMatch: 'full',
-    component: InitialMenuComponent,
-    data: {
-      menuList: [
-        {
-          label: 'Настройки пользователей и прав',
-          links: [
-            {
-              label: 'Пользователи',
-              link: 'users'
-            },
-            {
-              label: 'Групы пользователей',
-              link: 'user-departments'
-            }
-          ]
-        }
-      ]
-    }
-  },
-  {
-    path: 'api/v1/modules/users',
     children: [
       {
         path: '',
         pathMatch: 'full',
-        component: UsersComponent
+        component: InitialMenuComponent,
+        data: {
+          menuList: [
+            {
+              label: 'Настройки пользователей и прав',
+              links: [
+                {
+                  label: 'Пользователи',
+                  link: 'users'
+                },
+                {
+                  label: 'Групы пользователей',
+                  link: 'user-departments'
+                }
+              ]
+            }
+          ]
+        }
       },
       {
-        path: ':id',
-        component: UserCardComponent
-      }]
-  },
-  {
-    path: 'api/v1/modules/user-departments',
-    component: UserDepartmentsComponent
+        path: 'users',
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            component: UsersComponent
+          },
+          {
+            path: ':id',
+            component: UserCardComponent
+          }]
+      },
+      {
+        path: 'user-departments',
+        component: UserDepartmentsComponent
+      }
+    ]
   }
 ]
 
