@@ -1,4 +1,4 @@
-import { AccCompaniesService, AccSystemService, AccUsersService } from 'ng-accounting'
+import { AccCompaniesService, AccSystemService, AccUsersService, convertArrayToTree } from 'ng-accounting'
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -11,13 +11,16 @@ import { Subscription } from 'rxjs';
 export class UserDepartmentsComponent implements OnInit {
     constructor(private readonly accSystemService: AccSystemService, private readonly accCompaniesService: AccCompaniesService) { }
 
+    departmentsDataTable: any[] = []
     departments: any[] = []
+
     isCreateDepartment: boolean = false
     subscription: Subscription = new Subscription()
     currentCompany!: any
     createDepartmentForm: FormGroup = new FormGroup({
-        name: new FormControl(null, Validators.required),
-        description: new FormControl(null, Validators.required)
+        label: new FormControl(null, Validators.required),
+        description: new FormControl(null, Validators.required),
+        parentId: new FormControl(null, Validators.required)
     })
 
     ngOnInit(): void {
@@ -26,37 +29,39 @@ export class UserDepartmentsComponent implements OnInit {
 
     init(company: any = this.accSystemService.currentCompany) {
         this.currentCompany = company
-        this.departments = this.convertDepartments(company.departments)
-        console.log(this.departments);
+        this.departmentsDataTable = convertArrayToTree(company.departments, { isWrapedInData: true })
     }
 
-    convertDepartments(departments: any[] = []) {
-        return departments.reduce((acc: any[], department: any, index: number) => {
-            acc.push({
-                data: {
-                    key: index,
-                    label: department.name,
-                    _id: department._id,
-                    createdAt: department.createdAt
-                },
-                children: this.convertDepartments(department.subdivisions)
-            })
-            return acc
-        }, [])
-    }
 
     onCreateDepartment() {
+        this.departments = convertArrayToTree(this.currentCompany.departments)
         this.isCreateDepartment = true
     }
 
     createDepartment() {
-        this.currentCompany.departments.push(this.createDepartmentForm.value)
+        const data = this.createDepartmentForm.value
+        data.parentId = data.parentId?._id
+        this.currentCompany.departments.push(data)
+
         this.subscription.add(this.accCompaniesService.update(this.currentCompany).subscribe({
             next: ({ company }) => {
                 this.init(company)
+                this.createDepartmentForm.reset()
                 this.isCreateDepartment = false
             }
         }))
+    }
+
+    setDepartment(departments: any[], data: any) {
+        for (const department of departments) {
+            if (department._id === data.parent) {
+                department.children.push(data)
+            } else if (Array.isArray(department.children)) {
+                this.setDepartment(department.children, data)
+            }
+        }
+
+        return departments
     }
 
     updateCompany() {
@@ -68,7 +73,6 @@ export class UserDepartmentsComponent implements OnInit {
     }
 
     onDeleteDepartment(data: any) {
-        console.log(data);
         const index = this.currentCompany.departments.findIndex((d: any) => d._id === data._id)
         if (index !== -1) {
             this.currentCompany.departments.splice(index, 1)

@@ -1,7 +1,7 @@
 import { Subscription } from 'rxjs'
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AccSystemService, AccUsersService } from 'ng-accounting';
+import { AccSystemService, AccUsersService, convertArrayToTree, convertTreeToArray } from 'ng-accounting';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ConfirmationService } from 'primeng/api';
 
@@ -11,7 +11,7 @@ import { ConfirmationService } from 'primeng/api';
     styleUrls: ['./users.component.scss'],
     providers: [ConfirmationService]
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, OnDestroy {
     constructor(public readonly accSystemService: AccSystemService, private readonly router: Router, private readonly accUsersService: AccUsersService, private readonly confirmationService: ConfirmationService) { }
 
     users: any[] = []
@@ -31,84 +31,50 @@ export class UsersComponent implements OnInit {
     })
 
     ngOnInit(): void {
-        this.departments = this.getDepartments(this.accSystemService.currentCompany.departments)
         this.users = this.accSystemService.users
-        this.initUsers()
+        this.init()
     }
 
-    initUsers() {
-        this.users = this.users.reduce((acc, user) => {
-            if (Array.isArray(user.departments)) {
-                console.log(this.findInTree(this.departments, user.departments, []));
-                user.departments = this.findInTree(this.departments, user.departments, [])
-            }
-
-            acc.push(user)
-            return acc
-        }, [])
+    init() {
+        this.departments = convertArrayToTree(this.getDepartments(this.accSystemService.currentCompany.departments))
+        console.log(this.departments);
     }
 
     getDepartments(departments: any[] = []) {
-        if (!Array.isArray(departments)) {
-            departments = [departments]
-            console.log(this.users);
-        }
-
-        return departments.reduce((acc, department) => {
-            if (department) {
-                acc.push({
-                    key: department._id,
-                    label: department.name,
-                    data: department._id,
-                    children: department.subdivisions
-                })
-            }
-
-            return acc
-        }, [])
-    }
-
-    findInTree(nodes: any[] = [], dataArray: any[], result: any[], parent?: any): any {
-        if (!Array.isArray(nodes)) {
-            nodes = [nodes]
-        }
-
-        for (const node of nodes) {
-            for (const data of dataArray) {
-                if (node.data && data._id) {
-                    if (node.data === data._id) {
-                        result.push({
-                            key: data._id,
-                            label: data.name,
-                            data: data._id,
-                            children: []
-                        })
-                    } else if (Array.isArray(data.supervision) && data.supervision.length > 0) {
-                        this.findInTree(node.supervision, [data], result, node)
-                    }
-                }
-            }
-        }
-
-        return result
-    }
-
-    selectDepartment(departments: any[], user: any) {
-        this.loadingConfig.isLoadingData = true
-        user.departments = departments.map((dep: any) => {
+        return departments.map((department, index: number) => {
             return {
-                ref: dep.data
+                ...department,
+                data: department._id,
+                key: department._id
             }
         })
+    }
 
-        this.subscription.add(this.accUsersService.update(user).subscribe({
-            next: ({ user }) => {
-                const index = this.users.findIndex((usr: any) => user._id === usr._id)
-                this.users.splice(index, 1, user)
-                this.initUsers()
-                this.loadingConfig.isLoadingData = false
-            }
-        }))
+    getUserDepartments(departments: any[] = []) {
+        // return convertArrayToTree(departments)
+        console.log(departments);
+
+        return []
+    }
+
+    selectDepartment(selectedDeps: any, user: any) {
+        // this.loadingConfig.isLoadingData = true
+
+        // const departments = convertTreeToArray(selectedDeps).map((dep: any) => {
+        //     return {
+        //         ref: dep._id
+        //     }
+        // })
+
+        // user.departments = departments
+        // this.subscription.add(this.accUsersService.update(user).subscribe({
+        //     next: ({ user }) => {
+        //         const index = this.users.findIndex((usr: any) => user._id === usr._id)
+        //         this.users.splice(index, 1, user)
+        //         this.init()
+        //         this.loadingConfig.isLoadingData = false
+        //     }
+        // }))
     }
 
     openCard(element: any) {
@@ -128,7 +94,7 @@ export class UsersComponent implements OnInit {
             next: ({ user }) => {
                 const index = this.users.findIndex((usr: any) => user._id === usr._id)
                 this.users.splice(index, 1, user)
-                this.initUsers()
+
                 this.selectedUser = false
                 this.dialogsStage.isEditUser = false
                 this.loadingConfig.isLoadingData = false
@@ -151,5 +117,9 @@ export class UsersComponent implements OnInit {
                 this.accSystemService.init()
             }
         }))
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe()
     }
 }

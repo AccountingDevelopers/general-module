@@ -8,7 +8,7 @@
     </header>
 
     <div class="content">
-        <p-treeTable [value]="departments" [scrollable]="true">
+        <p-treeTable [value]="departmentsDataTable" [scrollable]="true">
             <ng-template pTemplate="header">
                 <tr>
                     <th>Название</th>
@@ -39,12 +39,17 @@
 
     <div [formGroup]="createDepartmentForm">
         <span class="p-fluid p-field">
-            <input type="text" pInputText required formControlName="name" [placeholder]="'Название отдела'" />
+            <input type="text" pInputText required formControlName="label" [placeholder]="'Название отдела'" />
         </span>
 
         <span class="p-fluid p-field">
             <textarea rows="2" pInputTextarea formControlName="description" [placeholder]="'Описание отдела'"
                 [style.minHeight]="'40px'" [autoResize]="true"></textarea>
+        </span>
+
+        <span class="p-fluid p-field">
+            <p-treeSelect appendTo="body" formControlName="parentId" key="_id" [options]="departments"
+                placeholder="Родительский отдел"></p-treeSelect>
         </span>
     </div>
 

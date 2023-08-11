@@ -31,12 +31,15 @@
                             <input pInputText [(ngModel)]="element.email">
                         </span>
                     </td>
-                    <td *ngIf="getDepartments(element.departments) as department">
-                        <!-- {{ getDepartments(element.departments) }} -->
+                    <td>
                         <span class="p-fluid">
-                            <p-treeSelect #tree appendTo="body" selectionMode="checkbox" [ngModel]="element.departments"
-                                [options]="departments" [metaKeySelection]="false" [placeholder]="'Выберите отдел'"
-                                (ngModelChange)="selectDepartment($event, element)"></p-treeSelect>
+                            <p-treeSelect #tree appendTo="body"
+                                selectionMode="multiply" display="chip" [ngModel]="element.departments | arrayToTree"
+                                [options]="departments" [placeholder]="'Выберите отдел'" (ngModelChange)="selectDepartment($event, element)"></p-treeSelect>
+                            <!-- <p-treeSelect #tree appendTo="body" selectionMode="checkbox" display="chip"
+                                [metaKeySelection]="false" [ngModel]="getUserDepartments(element.departments)" [options]="departments"
+                                [placeholder]="'Выберите отдел'"
+                                (ngModelChange)="selectDepartment(element)"></p-treeSelect> -->
                         </span>
                     </td>
                     <td>{{ element.createdAt | date }}</td>
@@ -44,7 +47,8 @@
                     <td>
                         <div class="element-controls">
                             <p-button icon="pi pi-cog" (click)="onEdit(element)"></p-button>
-                            <p-button icon="pi pi-trash" [disabled]="accSystemService.currentUser._id === element._id" (click)="onDelete(element)"></p-button>
+                            <p-button icon="pi pi-trash" [disabled]="accSystemService.currentUser._id === element._id"
+                                (click)="onDelete(element)"></p-button>
                         </div>
                     </td>
                 </tr>

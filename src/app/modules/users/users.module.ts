@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ModuleHeaderModule, TemplateRefModule } from 'ng-accounting';
+import { ModuleHeaderModule, ArrayToTreeModule } from 'ng-accounting';
 import { UsersComponent } from './users.component';
 import { ButtonModule } from 'primeng/button'
 import { TableModule } from 'primeng/table';
@@ -25,7 +25,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     DialogModule,
     CheckboxModule,
     ReactiveFormsModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    ArrayToTreeModule
   ],
   exports: [UsersComponent]
 })
