@@ -2,7 +2,7 @@
     <header>
         <lib-module-header header="Пользователи">
             <ng-template templateRef="headerToolbar">
-                <p-button icon="pi pi-plus" label="Создать"></p-button>
+                <!-- <p-button icon="pi pi-plus" label="Создать"></p-button> -->
             </ng-template>
         </lib-module-header>
     </header>
@@ -33,13 +33,9 @@
                     </td>
                     <td>
                         <span class="p-fluid">
-                            <p-treeSelect #tree appendTo="body"
-                                selectionMode="multiply" display="chip" [ngModel]="element.departments | arrayToTree"
-                                [options]="departments" [placeholder]="'Выберите отдел'" (ngModelChange)="selectDepartment($event, element)"></p-treeSelect>
-                            <!-- <p-treeSelect #tree appendTo="body" selectionMode="checkbox" display="chip"
-                                [metaKeySelection]="false" [ngModel]="getUserDepartments(element.departments)" [options]="departments"
-                                [placeholder]="'Выберите отдел'"
-                                (ngModelChange)="selectDepartment(element)"></p-treeSelect> -->
+                            <p-multiSelect #tree appendTo="body" filterBy="label" optionLabel="label" dataKey="_id"
+                                display="chip" [ngModel]="element.departments"
+                                [options]="departments" [filter]="true" [placeholder]="'Выберите отдел'" (ngModelChange)="selectDepartment($event, element)"></p-multiSelect>
                         </span>
                     </td>
                     <td>{{ element.createdAt | date }}</td>

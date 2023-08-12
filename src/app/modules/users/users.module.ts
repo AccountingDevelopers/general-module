@@ -11,6 +11,7 @@ import { TreeSelectModule } from 'primeng/treeselect';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @NgModule({
   declarations: [UsersComponent, UserCardComponent],
@@ -26,7 +27,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     CheckboxModule,
     ReactiveFormsModule,
     ConfirmDialogModule,
-    ArrayToTreeModule
+    ArrayToTreeModule,
+    MultiSelectModule
   ],
   exports: [UsersComponent]
 })

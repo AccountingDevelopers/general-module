@@ -6,9 +6,9 @@ import { UserDepartmentsComponent } from './modules/user-departments/user-depart
 import { UserCardComponent } from './modules/users/user-card/user-card.component';
 
 const routes: Routes = [
-  // {
-  //   // path: 'api/v1/modules',
-  //   children: [
+  {
+    path: 'api/v1/modules',
+    children: [
       {
         path: '',
         pathMatch: 'full',
@@ -48,8 +48,8 @@ const routes: Routes = [
         path: 'user-departments',
         component: UserDepartmentsComponent
       }
-    // ]
-  // } 
+    ]
+  }
 ]
 
 @NgModule({

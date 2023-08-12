@@ -36,8 +36,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     }
 
     init() {
-        this.departments = convertArrayToTree(this.getDepartments(this.accSystemService.currentCompany.departments))
-        console.log(this.departments);
+        this.departments = this.getDepartments(this.accSystemService.currentCompany.departments)
     }
 
     getDepartments(departments: any[] = []) {
@@ -50,31 +49,24 @@ export class UsersComponent implements OnInit, OnDestroy {
         })
     }
 
-    getUserDepartments(departments: any[] = []) {
-        // return convertArrayToTree(departments)
-        console.log(departments);
-
-        return []
-    }
-
     selectDepartment(selectedDeps: any, user: any) {
-        // this.loadingConfig.isLoadingData = true
+        this.loadingConfig.isLoadingData = true
 
-        // const departments = convertTreeToArray(selectedDeps).map((dep: any) => {
-        //     return {
-        //         ref: dep._id
-        //     }
-        // })
+        const departments = selectedDeps.map((department: any) => {
+            return {
+                ref: department._id
+            }
+        })
 
-        // user.departments = departments
-        // this.subscription.add(this.accUsersService.update(user).subscribe({
-        //     next: ({ user }) => {
-        //         const index = this.users.findIndex((usr: any) => user._id === usr._id)
-        //         this.users.splice(index, 1, user)
-        //         this.init()
-        //         this.loadingConfig.isLoadingData = false
-        //     }
-        // }))
+        user.departments = departments
+        this.subscription.add(this.accUsersService.update(user).subscribe({
+            next: ({ user }) => {
+                const index = this.users.findIndex((usr: any) => user._id === usr._id)
+                this.users.splice(index, 1, user)
+                this.init()
+                this.loadingConfig.isLoadingData = false
+            }
+        }))
     }
 
     openCard(element: any) {
